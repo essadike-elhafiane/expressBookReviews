@@ -3,7 +3,7 @@ let books = require("./booksdb.js");
 let isValid = require("./auth_users.js").isValid;
 let users = require("./auth_users.js").users;
 const public_users = express.Router();
-
+const axios = require('axios');
 
 public_users.post("/register", (req,res) => {
   const {username, password} = req.body;
@@ -70,6 +70,8 @@ public_users.get('/title/:title',function (req, res) {
   return res.status(300).json({message: "Yet to be implemented"});
 });
 
+
+
 //  Get book review
 public_users.get('/review/:isbn',function (req, res) {
   //Write your code here
@@ -78,5 +80,60 @@ public_users.get('/review/:isbn',function (req, res) {
   }
   return res.status(300).json({message: "Yet to be implemented"});
 });
+
+function getAllBooka() {
+  const url = `http://localhost:5001/`;
+  return axios.get(url, {
+    withCredentials: true
+  })
+  .then(response => {
+    return response.data;
+  }
+  )
+  .catch(error => {
+    return error;
+  });
+}
+
+function getBookDetailsByISBN(isbn) {
+  const url = `http://localhost:5001/isbn/${isbn}`;
+    return axios.get(url, {
+    withCredentials: true
+  })
+  .then(response => {
+    return response.data;
+  }
+  )
+  .catch(error => {
+    return error;
+  });
+}
+
+function getBookDetailsByAuthor(author) {
+  const url = `http://localhost:5001/author/${author}`;
+  return axios.get(url, {
+    withCredentials: true
+  })
+  .then(response => {
+    return response.data;
+  }
+  )
+  .catch(error => {
+    return error;
+  });
+}
+
+async function getBookByTitle(titel)
+{
+  try{
+    const response = await axios.get(`http://localhost:5001/title/${titel}`);
+    return response.data;
+  }
+  catch(err)
+  {
+    return err
+  }
+}
+
 
 module.exports.general = public_users;
